@@ -49,11 +49,12 @@
                     <div class="card-front">
                         <div class="game-icon">
                             <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M32,5 L10,20 L10,44 L32,59 L54,44 L54,20 Z" fill="none" stroke="#ff7b00" stroke-width="2" />
-                                <path d="M32,5 L32,59" fill="none" stroke="#ff7b00" stroke-width="2" />
-                                <path d="M10,20 L54,20" fill="none" stroke="#ff7b00" stroke-width="2" />
-                                <path d="M10,44 L54,44" fill="none" stroke="#ff7b00" stroke-width="2" />
-                                <circle cx="32" cy="32" r="10" fill="#ff7b00" opacity="0.5" />
+                                <!-- Ícone RPG: Espada e escudo minimalista -->
+                                <circle cx="32" cy="32" r="14" fill="#ff7b00" opacity="0.15" />
+                                <rect x="29" y="16" width="6" height="28" rx="2" fill="#fff" stroke="#ff7b00" stroke-width="2" />
+                                <polygon points="32,12 36,20 28,20" fill="#ff7b00" />
+                                <ellipse cx="32" cy="44" rx="4" ry="2" fill="#ff7b00" />
+                                <circle cx="32" cy="32" r="7" fill="none" stroke="#ff7b00" stroke-width="2" />
                             </svg>
                         </div>
                         <h2>RPG</h2>
@@ -72,12 +73,9 @@
                     <div class="card-front">
                         <div class="game-icon">
                             <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                                <rect x="10" y="10" width="20" height="20" fill="#00aaff" opacity="0.7" />
-                                <rect x="34" y="10" width="20" height="20" fill="#00aaff" opacity="0.5" />
-                                <rect x="10" y="34" width="20" height="20" fill="#00aaff" opacity="0.5" />
-                                <rect x="34" y="34" width="20" height="20" fill="#00aaff" opacity="0.7" />
-                                <path d="M30,10 L30,54" fill="none" stroke="#00aaff" stroke-width="2" />
-                                <path d="M10,30 L54,30" fill="none" stroke="#00aaff" stroke-width="2" />
+                                <!-- Ícone Puzzle: Peça de quebra-cabeça minimalista -->
+                                <rect x="16" y="16" width="32" height="32" rx="8" fill="#00aaff" opacity="0.15" />
+                                <path d="M32 20 a4 4 0 1 1 0 8 h-8 a4 4 0 1 0 0 8 h8 a4 4 0 1 1 0 8" fill="#00aaff" stroke="#00aaff" stroke-width="2" />
                             </svg>
                         </div>
                         <h2>Puzzle</h2>
@@ -94,12 +92,10 @@
                     <div class="card-front">
                         <div class="game-icon">
                             <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                                <rect x="10" y="15" width="44" height="34" rx="5" fill="#ff00d4" opacity="0.3" />
-                                <rect x="18" y="23" width="28" height="18" rx="2" fill="#ff00d4" opacity="0.5" />
-                                <circle cx="23" cy="50" r="3" fill="#ff00d4" />
-                                <circle cx="41" cy="50" r="3" fill="#ff00d4" />
-                                <circle cx="18" cy="35" r="2" fill="#ff00d4" />
-                                <circle cx="46" cy="35" r="2" fill="#ff00d4" />
+                                <!-- Ícone Arcade: Nave espacial minimalista -->
+                                <polygon points="32,12 40,44 32,36 24,44" fill="#ff00d4" opacity="0.7" />
+                                <rect x="30" y="36" width="4" height="10" fill="#ff00d4" />
+                                <circle cx="32" cy="32" r="14" fill="#ff00d4" opacity="0.12" />
                             </svg>
                         </div>
                         <h2>Arcade</h2>
@@ -109,6 +105,30 @@
                         <h3>Clássicos Renovados</h3>
                         <p>Prepare-se para horas de diversão com o nosso jogo retrô — pura adrenalina e nostalgia!</p>
                         <button class="play-btn">Jogar Agora</button>
+                    </div>
+                </div>
+
+                <div class="game-card action" id="action-card">
+                    <div class="card-front">
+                        <div class="game-icon">
+                            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Ícone Ação: Bloco e cogumelo minimalista -->
+                                <rect x="18" y="36" width="28" height="14" rx="2" fill="#ffb300" stroke="#b8860b" stroke-width="2" />
+                                <circle cx="32" cy="30" r="8" fill="#fff" stroke="#f44336" stroke-width="2" />
+                                <ellipse cx="32" cy="33" rx="4" ry="2" fill="#b8860b" />
+                                <circle cx="29" cy="28" r="1.2" fill="#f44336" />
+                                <circle cx="35" cy="28" r="1.2" fill="#f44336" />
+                            </svg>
+                        </div>
+                        <h2>Ação</h2>
+                        <p>Corra, salte e derrote inimigos em uma aventura cheia de ação no melhor estilo Mario!</p>
+                    </div>
+                    <div class="card-back">
+                        <h3>Aventura de Plataforma</h3>
+                        <p>Supere obstáculos, colete moedas e salve o dia neste jogo de plataforma clássico!</p>
+                        <a href="acao-game.html" target="_blank" rel="noopener noreferrer">
+                            <button class="play-btn">Jogar Agora</button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -146,6 +166,13 @@
                     <h3>Arcade: Clássico Renovado</h3>
                     <p>Reviva o clássico jogos de arcade com um toque moderno</p>
                     <button class="start-game">Jogar Agora</button>
+                </div>
+                <div class="modal-game-option" data-game="ação">
+                    <h3>Ação: Super Plataforma</h3>
+                    <p>Supere obstáculos e divirta-se com uma aventura cheia de ação e desafios!</p>
+                    <a href="acao-game.html" target="_blank" rel="noopener noreferrer">
+                        <button class="start-game">Jogar Agora</button>
+                    </a>
                 </div>
             </div>
         </div>
