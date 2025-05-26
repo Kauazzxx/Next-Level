@@ -45,90 +45,43 @@
             </div>
 
             <div class="games-container">
-                <div class="game-card rpg" id="rpg-card">
+                <div class="game-card central" id="central-card">
                     <div class="card-front">
                         <div class="game-icon">
                             <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                                <!-- Ícone RPG: Espada e escudo minimalista -->
-                                <circle cx="32" cy="32" r="14" fill="#ff7b00" opacity="0.15" />
-                                <rect x="29" y="16" width="6" height="28" rx="2" fill="#fff" stroke="#ff7b00" stroke-width="2" />
-                                <polygon points="32,12 36,20 28,20" fill="#ff7b00" />
-                                <ellipse cx="32" cy="44" rx="4" ry="2" fill="#ff7b00" />
-                                <circle cx="32" cy="32" r="7" fill="none" stroke="#ff7b00" stroke-width="2" />
+                                <!-- Ícone Central: Combinação de elementos dos jogos -->
+                                <circle cx="32" cy="32" r="20" fill="url(#central-gradient)" opacity="0.15" />
+                                <path d="M32 20 a4 4 0 1 1 0 8 h-8 a4 4 0 1 0 0 8 h8 a4 4 0 1 1 0 8" fill="#00aaff" stroke="#00aaff" stroke-width="1" />
+                                <rect x="29" y="24" width="6" height="16" rx="2" fill="#ff7b00" opacity="0.7" />
+                                <polygon points="32,20 36,44 28,44" fill="#ff00d4" opacity="0.7" />
                             </svg>
                         </div>
-                        <h2>RPG</h2>
-                        <p>Embarque em uma jornada épica repleta de magia e aventura</p>
+                        <h2>Next-Level Games</h2>
+                        <p>Explore nossa coleção de jogos incríveis em um só lugar!</p>
                     </div>
                     <div class="card-back">
-                        <h3>Aventura Mística</h3>
-                        <p>Domine habilidades únicas e enfrente inimigos poderosos em combates onde cada decisão conta.</p>
-                        <a href="rpg-game.html" target="_blank" rel="noopener noreferrer">
-                            <button class="play-btn">Jogar Agora</button>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="game-card puzzle" id="puzzle-card">
-                    <div class="card-front">
-                        <div class="game-icon">
-                            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                                <!-- Ícone Puzzle: Peça de quebra-cabeça minimalista -->
-                                <rect x="16" y="16" width="32" height="32" rx="8" fill="#00aaff" opacity="0.15" />
-                                <path d="M32 20 a4 4 0 1 1 0 8 h-8 a4 4 0 1 0 0 8 h8 a4 4 0 1 1 0 8" fill="#00aaff" stroke="#00aaff" stroke-width="2" />
-                            </svg>
+                        <h3>Escolha sua Aventura</h3>
+                        <div class="game-options">
+                            <a href="rpg-game.html" class="game-option">
+                                <div class="rpg-icons">
+                                    <i class="fas fa-sword fa-beat"></i>
+                                    <i class="fas fa-shield-halved fa-beat"></i>
+                                </div>
+                                <span>RPG</span>
+                            </a>
+                            <a href="puzzle-game.html" class="game-option">
+                                <i class="fas fa-brain fa-bounce"></i>
+                                <span>Puzzle</span>
+                            </a>
+                            <a href="arcade-game.html" class="game-option">
+                                <i class="fas fa-rocket fa-flip"></i>
+                                <span>Arcade</span>
+                            </a>
+                            <a href="acao-game.html" class="game-option">
+                                <i class="fas fa-fire fa-shake"></i>
+                                <span>Ação</span>
+                            </a>
                         </div>
-                        <h2>Puzzle</h2>
-                        <p>Desafie sua mente com um quebra-cabeça intrigante e teste sua lógica e criatividade!</p>
-                    </div>
-                    <div class="card-back">
-                        <h3>Enigmas Infinitos</h3>
-                        <p>Um quebra-cabeça para desafiar seu raciocínio lógico e criatividade!</p>
-                        <button class="play-btn">Jogar Agora</button>
-                    </div>
-                </div>
-
-                <div class="game-card arcade" id="arcade-card">
-                    <div class="card-front">
-                        <div class="game-icon">
-                            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                                <!-- Ícone Arcade: Nave espacial minimalista -->
-                                <polygon points="32,12 40,44 32,36 24,44" fill="#ff00d4" opacity="0.7" />
-                                <rect x="30" y="36" width="4" height="10" fill="#ff00d4" />
-                                <circle cx="32" cy="32" r="14" fill="#ff00d4" opacity="0.12" />
-                            </svg>
-                        </div>
-                        <h2>Arcade</h2>
-                        <p>Reviva a nostalgia dos clássicos com gráficos vibrantes e ação eletrizante!</p>
-                    </div>
-                    <div class="card-back">
-                        <h3>Clássicos Renovados</h3>
-                        <p>Prepare-se para horas de diversão com o nosso jogo retrô — pura adrenalina e nostalgia!</p>
-                        <button class="play-btn">Jogar Agora</button>
-                    </div>
-                </div>
-
-                <div class="game-card action" id="action-card">
-                    <div class="card-front">
-                        <div class="game-icon">
-                            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                                <!-- Ícone Ação: Bloco e cogumelo minimalista -->
-                                <rect x="18" y="36" width="28" height="14" rx="2" fill="#ffb300" stroke="#b8860b" stroke-width="2" />
-                                <circle cx="32" cy="30" r="8" fill="#fff" stroke="#f44336" stroke-width="2" />
-                                <ellipse cx="32" cy="33" rx="4" ry="2" fill="#b8860b" />
-                                <circle cx="29" cy="28" r="1.2" fill="#f44336" />
-                                <circle cx="35" cy="28" r="1.2" fill="#f44336" />
-                            </svg>
-                        </div>
-                        <h2>Ação</h2>
-                        <p>Corra, salte e derrote inimigos em uma aventura cheia de ação no melhor estilo Mario!</p>
-                    </div>
-                    <div class="card-back">
-                        <h3>Aventura de Plataforma</h3>
-                        <p>Supere obstáculos, colete moedas e salve o dia neste jogo de plataforma clássico!</p>
-                        <a href="acao-game.html" target="_blank" rel="noopener noreferrer">
-                            <button class="play-btn">Jogar Agora</button>
-                        </a>
                     </div>
                 </div>
             </div>
