@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sobre - Next-Level</title>
+    <title>Next-Level</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
@@ -19,130 +19,61 @@
     <div class="container">
         <header>
             <div class="logo">
-                <img src="LogoNext.png" alt="Next-Level Logo" style="height: 150px;">
+                <img src="LogoNext.png" alt="Next-Level Logo" style="height: 50px;">
             </div>
             <nav>
                 <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="#" class="active">Sobre</a></li>
+                    <li><a href="#" class="active">Home</a></li>
+                    <li><a href="sobre.html">Sobre</a></li>
                     <li><a href="contato.html">Contato</a></li>
                 </ul>
             </nav>
         </header>
 
         <main>
-            <div class="hero about-hero">
-                <h1>Sobre o Next-Level</h1>
-                <p>Explorando mundos virtuais, conectando jogadores</p>
+            <div class="hero">
+                <h1>Descubra Novos Mundos</h1>
+                <p>Entre no universo dos jogos e viva experiências únicas</p>
             </div>
 
-            <div class="about-content">
-                <div class="about-section mission">
-                    <div class="about-icon">
-                        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M32,10 L10,32 L32,54 L54,32 Z" fill="none" stroke="#ff7b00" stroke-width="3" />
-                            <circle cx="32" cy="32" r="15" fill="rgba(255, 123, 0, 0.3)" />
-                            <path d="M32,22 L32,32 L38,38" fill="none" stroke="#ff7b00" stroke-width="3" />
-                        </svg>
-                    </div>
-                    <h2>Nossa Missão</h2>
-                    <p>Criar experiências de jogos envolventes que transportem os jogadores para mundos extraordinários, desafiando limites e estimulando a criatividade.</p>
-                </div>
-
-                <div class="about-section vision">
-                    <div class="about-icon">
-                        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M32,10 C20,20 10,30 10,42 C10,52 20,62 32,62 C44,62 54,52 54,42 C54,30 44,20 32,10 Z" fill="none" stroke="#00aaff" stroke-width="3" />
-                            <circle cx="32" cy="42" r="10" fill="rgba(0, 170, 255, 0.3)" />
-                            <path d="M32,32 L32,52" fill="none" stroke="#00aaff" stroke-width="3" />
-                        </svg>
-                    </div>
-                    <h2>Nossa Visão</h2>
-                    <p>Ser a plataforma líder em jogos interativos, unindo jogadores de todas as idades e níveis de habilidade em experiências memoráveis.</p>
-                </div>
-
-                <div class="about-section values">
-                    <div class="about-icon">
-                        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M32,10 L10,32 L32,54 L54,32 Z" fill="none" stroke="#ff00d4" stroke-width="3" />
-                            <circle cx="32" cy="32" r="15" fill="rgba(255, 0, 212, 0.3)" />
-                            <path d="M22,32 L30,40 L42,22" fill="none" stroke="#ff00d4" stroke-width="3" />
-                        </svg>
-                    </div>
-                    <h2>Nossos Valores</h2>
-                    <p>Inovação, diversão, inclusão e paixão por jogos são os pilares que sustentam cada experiência que criamos.</p>
-                </div>
-            </div>
-
-            <div class="team-section">
-                <h2>Nosso Time</h2>
-                <p>Um grupo apaixonado de desenvolvedores, designers e amantes de jogos dedicados a criar experiências extraordinárias.</p>
-                <div class="team-members">
-                    <div class="team-member">
-                        <div class="member-avatar">
+            <div class="games-container">
+                <div class="game-card central" id="central-card">
+                    <div class="card-front">
+                        <div class="game-icon">
                             <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="32" cy="32" r="30" fill="rgba(255, 123, 0, 0.3)" />
-                                <path d="M32,20 C36,20 40,24 40,28 C40,32 36,36 32,36 C28,36 24,32 24,28 C24,24 28,20 32,20" fill="#ff7b00" />
-                                <path d="M20,44 C20,38 26,34 32,34 C38,34 44,38 44,44" fill="#ff7b00" />
+                                <!-- Ícone Central: Combinação de elementos dos jogos -->
+                                <circle cx="32" cy="32" r="20" fill="url(#central-gradient)" opacity="0.15" />
+                                <path d="M32 20 a4 4 0 1 1 0 8 h-8 a4 4 0 1 0 0 8 h8 a4 4 0 1 1 0 8" fill="#00aaff" stroke="#00aaff" stroke-width="1" />
+                                <rect x="29" y="24" width="6" height="16" rx="2" fill="#ff7b00" opacity="0.7" />
+                                <polygon points="32,20 36,44 28,44" fill="#ff00d4" opacity="0.7" />
                             </svg>
                         </div>
-                        <h3>Kauã Rodrigues</h3>
-                        <p>Líder de Desenvolvimento</p>
+                        <h2>Next-Level Games</h2>
+                        <p>Explore nossa coleção de jogos incríveis em um só lugar!</p>
                     </div>
-                    <div class="team-member">
-                        <div class="member-avatar">
-                            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="32" cy="32" r="30" fill="rgba(0, 170, 255, 0.3)" />
-                                <path d="M32,20 C36,20 40,24 40,28 C40,32 36,36 32,36 C28,36 24,32 24,28 C24,24 28,20 32,20" fill="#00aaff" />
-                                <path d="M20,44 C20,38 26,34 32,34 C38,34 44,38 44,44" fill="#00aaff" />
-                            </svg>
+                    <div class="card-back">
+                        <h3>Escolha sua Aventura</h3>
+                        <div class="game-options">
+                            <a href="rpg-game.html" class="game-option">
+                                <div class="rpg-icons">
+                                    <i class="fas fa-sword fa-beat"></i>
+                                    <i class="fas fa-shield-halved fa-beat"></i>
+                                </div>
+                                <span>RPG</span>
+                            </a>
+                            <a href="puzzle-game.html" class="game-option">
+                                <i class="fas fa-brain fa-bounce"></i>
+                                <span>Puzzle</span>
+                            </a>
+                            <a href="arcade-game.html" class="game-option">
+                                <i class="fas fa-rocket fa-flip"></i>
+                                <span>Arcade</span>
+                            </a>
+                            <a href="acao-game.html" class="game-option">
+                                <i class="fas fa-fire fa-shake"></i>
+                                <span>Ação</span>
+                            </a>
                         </div>
-                        <h3>Vinicius Ribeiro</h3>
-                        <p>Designer de UX</p>
-                    </div>
-                    <div class="team-member">
-                        <div class="member-avatar">
-                            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="32" cy="32" r="30" fill="rgba(255, 0, 212, 0.3)" />
-                                <path d="M32,20 C36,20 40,24 40,28 C40,32 36,36 32,36 C28,36 24,32 24,28 C24,24 28,20 32,20" fill="#ff00d4" />
-                                <path d="M20,44 C20,38 26,34 32,34 C38,34 44,38 44,44" fill="#ff00d4" />
-                            </svg>
-                        </div>
-                        <h3>João Pedro</h3>
-                        <p>Desenvolvedor de Backend</p>
-                    </div>
-                    <div class="team-member">
-                        <div class="member-avatar">
-                            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="32" cy="32" r="30" fill="rgba(0, 255, 170, 0.3)" />
-                                <path d="M32,20 C36,20 40,24 40,28 C40,32 36,36 32,36 C28,36 24,32 24,28 C24,24 28,20 32,20" fill="#00ffaa" />
-                                <path d="M20,44 C20,38 26,34 32,34 C38,34 44,38 44,44" fill="#00ffaa" />
-                            </svg>
-                        </div>
-                        <h3>Luis Henrique</h3>
-                        <p>Designer de Jogos</p>
-                    </div>
-                    <div class="team-member">
-                        <div class="member-avatar">
-                            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="32" cy="32" r="30" fill="rgba(255, 255, 0, 0.3)" />
-                                <path d="M32,20 C36,20 40,24 40,28 C40,32 36,36 32,36 C28,36 24,32 24,28 C24,24 28,20 32,20" fill="#ffff00" />
-                                <path d="M20,44 C20,38 26,34 32,34 C38,34 44,38 44,44" fill="#ffff00" />
-                            </svg>
-                        </div>
-                        <h3>Agner Aiton</h3>
-                        <p>Diretor Criativo</p>
-                    </div>
-                    <div class="team-member">
-                        <div class="member-avatar">
-                            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="32" cy="32" r="30" fill="rgba(75,0,130,0.3)" />
-                                <path d="M32,20 C36,20 40,24 40,28 C40,32 36,36 32,36 C28,36 24,32 24,28 C24,24 28,20 32,20" fill="#8A2BE2" />
-                                <path d="M20,44 C20,38 26,34 32,34 C38,34 44,38 44,44" fill="#8A2BE2" />
-                            </svg>
-                        </div>
-                        <h3>Arthur Ramos</h3>
-                        <p>Gerente de Projeto</p>
                     </div>
                 </div>
             </div>
@@ -162,6 +93,35 @@
     </div>
 
     <div class="particles"></div>
+    <div class="modal-overlay" id="game-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-games">
+                <div class="modal-game-option" data-game="rpg">
+                    <h3>RPG: Aventura Mística</h3>
+                    <p>Embarque em uma jornada épica através de combates fantásticos</p>
+                    <button class="start-game">Começar Aventura</button>
+                </div>
+                <div class="modal-game-option" data-game="puzzle">
+                    <h3>Puzzle: Enigmas Infinitos</h3>
+                    <p>Desafie sua mente com um quebra-cabeça intrigante</p>
+                    <button class="start-game">Iniciar Desafio</button>
+                </div>
+                <div class="modal-game-option" data-game="arcade">
+                    <h3>Arcade: Clássico Renovado</h3>
+                    <p>Reviva o clássico jogos de arcade com um toque moderno</p>
+                    <button class="start-game">Jogar Agora</button>
+                </div>
+                <div class="modal-game-option" data-game="ação">
+                    <h3>Ação: Super Plataforma</h3>
+                    <p>Supere obstáculos e divirta-se com uma aventura cheia de ação e desafios!</p>
+                    <a href="acao-game.html" target="_blank" rel="noopener noreferrer">
+                        <button class="start-game">Jogar Agora</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
     <script type="module" src="script.js"></script>
 </body>
 </html>
