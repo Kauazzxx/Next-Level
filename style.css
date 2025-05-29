@@ -1001,3 +1001,9 @@ footer p {
     0%, 100% { filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5)); }
     50% { filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.8)); }
 }
+
+.particle {
+    border: none !important;
+    filter: drop-shadow(0 0 6px rgba(255,255,255,0.7));
+    pointer-events: none;
+}
