@@ -21,7 +21,7 @@ function initParticles() {
      const size = Math.random() * 15 + 12; // bolinhas maiores
 const posX = Math.random() * 100;
 const posY = Math.random() * 100;
-const opacity = Math.random() * 0.2 + 0.5; // opacidade de 0.7 a 1
+const opacity = Math.random() * 0.1 + 0.3; // opacidade de 0.7 a 1
 const color = `hsl(${Math.random() * 360}, 100%, 50%)`; // cor aleatória
 particle.style.cssText = `
     position: absolute;
