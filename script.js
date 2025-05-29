@@ -16,15 +16,14 @@ function initParticles() {
     for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
         particle.className = 'particle';
-        
-        // Random particle style
-        const size = Math.random() * 5 + 1;
+
+        // Bolinha colorida
+        const size = Math.random() * 8 + 6; // bolinhas maiores
         const posX = Math.random() * 100;
         const posY = Math.random() * 100;
-        const opacity = Math.random() * 0.5 + 0.2;
-        const duration = Math.random() * 20 + 10;
-        const delay = Math.random() * 5;
-        
+        const opacity = Math.random() * 0.3 + 0.7; // opacidade de 0.7 a 1
+        const colors = ['#ff7b00', '#ff00d4', '#00aaff', '#fff700', '#00ff88', '#ff3366'];
+        const color = colors[Math.floor(Math.random() * colors.length)];
         particle.style.cssText = `
             position: absolute;
             width: ${size}px;
@@ -32,14 +31,15 @@ function initParticles() {
             border-radius: 50%;
             left: ${posX}%;
             top: ${posY}%;
-            background: ${i % 3 === 0 ? '#ff7b00' : i % 3 === 1 ? '#ff00d4' : '#00aaff'};
+            background: ${color};
             opacity: ${opacity};
             pointer-events: none;
         `;
-        
         particlesContainer.appendChild(particle);
-        
-        // Animation
+
+        // Animação
+        const duration = Math.random() * 20 + 10;
+        const delay = Math.random() * 5;
         gsap.to(particle, {
             y: `${Math.random() * 100 - 50}vh`,
             x: `${Math.random() * 100 - 50}vw`,
