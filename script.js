@@ -18,7 +18,7 @@ function initParticles() {
         particle.className = 'particle';
 
         // Bolinha colorida
-     const size = Math.random() * 20 + 20; // bolinhas maiores
+     const size = Math.random() * 15 + 12; // bolinhas maiores
 const posX = Math.random() * 100;
 const posY = Math.random() * 100;
 const opacity = Math.random() * 0.2 + 0.5; // opacidade de 0.7 a 1
