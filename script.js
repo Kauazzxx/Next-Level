@@ -18,23 +18,22 @@ function initParticles() {
         particle.className = 'particle';
 
         // Bolinha colorida
-        const size = Math.random() * 8 + 6; // bolinhas maiores
-        const posX = Math.random() * 100;
-        const posY = Math.random() * 100;
-        const opacity = Math.random() * 0.3 + 0.7; // opacidade de 0.7 a 1
-        const colors = ['#ff7b00', '#ff00d4', '#00aaff', '#fff700', '#00ff88', '#ff3366'];
-        const color = colors[Math.floor(Math.random() * colors.length)];
-        particle.style.cssText = `
-            position: absolute;
-            width: ${size}px;
-            height: ${size}px;
-            border-radius: 50%;
-            left: ${posX}%;
-            top: ${posY}%;
-            background: ${color};
-            opacity: ${opacity};
-            pointer-events: none;
-        `;
+     const size = Math.random() * 20 + 20; // bolinhas maiores
+const posX = Math.random() * 100;
+const posY = Math.random() * 100;
+const opacity = Math.random() * 0.3 + 0.7; // opacidade de 0.7 a 1
+const color = `hsl(${Math.random() * 360}, 100%, 50%)`; // cor aleatória
+particle.style.cssText = `
+    position: absolute;
+    width: ${size}px;
+    height: ${size}px;
+    border-radius: 50%;
+    left: ${posX}%;
+    top: ${posY}%;
+    background: ${color};
+    opacity: ${opacity};
+    pointer-events: none;
+`;
         particlesContainer.appendChild(particle);
 
         // Animação
