@@ -37,7 +37,7 @@ particle.style.cssText = `
         particlesContainer.appendChild(particle);
 
         // Animação
-        const duration = Math.random() * 20 + 10;
+        const duration = Math.random() * 15 + 8;
         const delay = Math.random() * 5;
         gsap.to(particle, {
             y: `${Math.random() * 100 - 50}vh`,
