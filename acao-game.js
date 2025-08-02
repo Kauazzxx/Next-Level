@@ -1,416 +1,330 @@
-// SUPER JOGO DE PLATAFORMA 2D - ESTRUTURA AVANÇADA
-// Menus, HUD, Barra de Progresso, Sistema de Fases, Modularização
-// (Etapa 1: menus, HUD, barra de progresso, sistema de fases)
-
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
-const GAME_WIDTH = 1200;
-const GAME_HEIGHT = 600;
-canvas.width = GAME_WIDTH;
-canvas.height = GAME_HEIGHT;
-
-// --- CORES E VISUAL ---
-const COLORS = {
-    bg: '#181c25',
-    ground: '#23283a',
-    grass: '#2e354a',
-    hudBg: '#23283a',
-    hudText: '#f5f5f5',
-    playerBody: '#3ec6e0',
-    playerFace: '#ffe0b2',
-    playerHair: '#222',
-    playerShirt: '#ff7b00',
-    playerPants: '#1976d2',
-    playerShoe: '#333',
-    coin: '#ffe066',
-    coinDetail: '#fffde7',
-    coinStroke: '#b8860b',
-    coinSpecial: '#ff4081',
-    monster1: '#7c3aed',
-    monster2: '#e94560',
-    monster3: '#43a047',
-    monsterFly: '#00bcd4',
-    monsterEye: '#fff',
-    monsterPupil: '#222',
-    monsterMouth: '#fff',
-    monsterTooth: '#e94560',
-    particle: '#ffe066',
-    jumpParticle: '#3ec6e0',
-    powerup: '#00e676',
-    powerupGlow: '#b9f6ca',
-    speedup: '#00b0ff',
-    shield: '#ffd600',
-    flag: '#ffd600',
-    flagPole: '#fff',
-    flagBase: '#bdbdbd',
-    spike: '#ff1744',
-    life: '#e94560',
-    level: '#3ec6e0',
-    highscore: '#ffe066',
-    win: '#00e676',
-    checkpoint: '#ff9800',
-    checkpointActive: '#00e676',
-    vanish: '#bdbdbd',
-    boss: '#ff5722',
-    bossEye: '#fff',
-    bossPupil: '#222',
-    bossMouth: '#fff',
-    bossTooth: '#fff',
-    progressBar: '#00e676',
-    progressBg: '#333'
-};
-
-// --- ESTADOS DO JOGO ---
-const GAME_STATES = {
-    MENU: 'menu',
-    PLAYING: 'playing',
-    PAUSED: 'paused',
-    GAMEOVER: 'gameover',
-    WIN: 'win',
-    CREDITS: 'credits',
-    CONTROLS: 'controls',
-    TUTORIAL: 'tutorial'
-};
-let gameState = GAME_STATES.MENU;
-let currentLevel = 0;
-let levels = [];
-let score = 0;
-let specialScore = 0;
-let highscore = localStorage.getItem('acao_highscore') || 0;
-let lives = 3;
-let level = 1;
-let particles = [];
-let win = false;
-let lastCheckpoint = { x: 80, y: 320 };
-let showTip = true;
-let activePowerups = { speed: 0, shield: 0 };
-let cameraX = 0;
-let menuSelection = 0;
-let menuOptions = ['Jogar', 'Controles', 'Créditos'];
-let pauseSelection = 0;
-let pauseOptions = ['Continuar', 'Reiniciar', 'Menu'];
-let showTutorial = true;
-
-// --- ESTRUTURA DE FASES (exemplo de 2 fases, pode expandir) ---
-function createLevel1() {
-    return {
-        name: 'Floresta Inicial',
-        length: 4200,
-        platforms: [
-            { x: 0, y: 360, w: 600 },
-            { x: 700, y: 320, w: 200 },
-            { x: 1000, y: 360, w: 300 },
-            { x: 1400, y: 300, w: 180 },
-            { x: 1700, y: 360, w: 400 },
-            { x: 2200, y: 320, w: 200 },
-            { x: 2500, y: 360, w: 500 },
-            { x: 850, y: 220, w: 100 },
-            { x: 1250, y: 180, w: 120 },
-            { x: 2000, y: 220, w: 100 },
-            { x: 2800, y: 200, w: 120 }
-        ],
-        // ... (demais elementos: buracos, moedas, inimigos, etc)
-        // Para simplificar, só estrutura inicial nesta etapa
-    };
-}
-function createLevel2() {
-    return {
-        name: 'Caverna Sombria',
-        length: 5000,
-        platforms: [
-            { x: 0, y: 360, w: 400 },
-            { x: 600, y: 320, w: 200 },
-            { x: 900, y: 260, w: 180 },
-            { x: 1200, y: 360, w: 400 },
-            { x: 1800, y: 320, w: 200 },
-            { x: 2100, y: 260, w: 120 },
-            { x: 2400, y: 360, w: 600 },
-            { x: 3200, y: 320, w: 200 },
-            { x: 3500, y: 260, w: 120 },
-            { x: 3800, y: 360, w: 400 },
-            { x: 4300, y: 320, w: 200 }
-        ]
-    };
-}
-levels = [createLevel1(), createLevel2()];
-
-// --- PERSONAGEM ---
-const player = {
-    x: 80,
-    y: 320,
-    w: 40,
-    h: 48,
-    vy: 0,
-    vx: 0,
-    onGround: true,
-    blink: false,
-    blinkTimer: 0,
-    jumps: 0,
-    maxJumps: 2
-};
-
-// --- ESTRUTURA DE CHEFÃO ---
-const boss = {
-    x: 0, y: 0, w: 80, h: 100, life: 20, active: false, phase: 1, attackTimer: 0, direction: 1
-    // Adicione mais propriedades conforme necessário
-};
-
-// --- INIMIGOS INTELIGENTES ---
-let smartEnemies = [
-    // Exemplo: perseguidor
-    { x: 2000, y: 320, w: 40, h: 48, type: 'chaser', speed: 2, active: true }
-    // Adicione mais tipos: atirador, voador, etc
-];
-
-// --- POWER-UPS AVANÇADOS ---
-let advancedPowerups = [
-    { x: 1800, y: 200, r: 18, type: 'superJump', taken: false },
-    { x: 3500, y: 400, r: 18, type: 'magnet', taken: false }
-    // superJump: pulo mais alto, magnet: atrai moedas
-];
-
-// --- CONQUISTAS ---
-let achievements = [
-    { name: 'Primeira Moeda', unlocked: false, condition: () => score > 0 },
-    { name: 'Sem Morrer', unlocked: false, condition: () => lives === 3 && gameState === GAME_STATES.WIN },
-    { name: 'Todas as Moedas', unlocked: false, condition: () => /* lógica para todas as moedas */ false }
-    // Adicione mais conquistas
-];
-
-// --- RANKING LOCAL ---
-function saveScore(newScore) {
-    let ranking = JSON.parse(localStorage.getItem('ranking') || '[]');
-    ranking.push(newScore);
-    ranking.sort((a, b) => b - a);
-    ranking = ranking.slice(0, 10);
-    localStorage.setItem('ranking', JSON.stringify(ranking));
-}
-function drawRanking() {
-    let ranking = JSON.parse(localStorage.getItem('ranking') || '[]');
-    ctx.save();
-    ctx.globalAlpha = 0.95;
-    ctx.fillStyle = COLORS.hudBg;
-    ctx.fillRect(350, 100, 500, 400);
-    ctx.restore();
-    ctx.font = 'bold 32px Arial';
-    ctx.fillStyle = COLORS.coin;
-    ctx.textAlign = 'center';
-    ctx.fillText('RANKING', GAME_WIDTH / 2, 150);
-    ctx.font = '20px Arial';
-    ctx.fillStyle = COLORS.hudText;
-    ranking.forEach((score, i) => {
-        ctx.fillText(`${i + 1}º - ${score} pontos`, GAME_WIDTH / 2, 200 + i * 30);
-    });
-    ctx.font = '18px Arial';
-    ctx.fillText('Pressione ESC para voltar', GAME_WIDTH / 2, 550);
-}
-
-// --- FUNÇÕES DE MENUS ---
-function drawMenu() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = COLORS.bg;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.font = 'bold 48px Arial';
-    ctx.fillStyle = COLORS.coin;
-    ctx.textAlign = 'center';
-    ctx.fillText('SUPER JOGO DE PLATAFORMA', canvas.width / 2, 120);
-    ctx.font = '28px Arial';
-    menuOptions.forEach((opt, i) => {
-        ctx.fillStyle = i === menuSelection ? COLORS.level : COLORS.hudText;
-        ctx.fillText(opt, canvas.width / 2, 200 + i * 60);
-    });
-    ctx.font = '18px Arial';
-    ctx.fillStyle = COLORS.hudText;
-    ctx.fillText('Use ↑/↓ e ENTER para navegar', canvas.width / 2, 380);
-}
-function drawPause() {
-    ctx.save();
-    ctx.globalAlpha = 0.9;
-    ctx.fillStyle = COLORS.hudBg;
-    ctx.fillRect(150, 100, 500, 200);
-    ctx.restore();
-    ctx.font = 'bold 36px Arial';
-    ctx.fillStyle = COLORS.coin;
-    ctx.textAlign = 'center';
-    ctx.fillText('PAUSADO', canvas.width / 2, 160);
-    ctx.font = '24px Arial';
-    pauseOptions.forEach((opt, i) => {
-        ctx.fillStyle = i === pauseSelection ? COLORS.level : COLORS.hudText;
-        ctx.fillText(opt, canvas.width / 2, 210 + i * 40);
-    });
-    ctx.font = '16px Arial';
-    ctx.fillStyle = COLORS.hudText;
-    ctx.fillText('Pressione P para voltar', canvas.width / 2, 320);
-}
-function drawCredits() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = COLORS.bg;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.font = 'bold 36px Arial';
-    ctx.fillStyle = COLORS.coin;
-    ctx.textAlign = 'center';
-    ctx.fillText('CRÉDITOS', canvas.width / 2, 100);
-    ctx.font = '20px Arial';
-    ctx.fillStyle = COLORS.hudText;
-    ctx.fillText('Desenvolvido por Você', canvas.width / 2, 160);
-    ctx.fillText('Powered by JavaScript + Canvas', canvas.width / 2, 200);
-    ctx.fillText('Com ajuda da IA', canvas.width / 2, 240);
-    ctx.font = '18px Arial';
-    ctx.fillText('Pressione ESC para voltar', canvas.width / 2, 350);
-}
-function drawControls() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = COLORS.bg;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.font = 'bold 36px Arial';
-    ctx.fillStyle = COLORS.coin;
-    ctx.textAlign = 'center';
-    ctx.fillText('CONTROLES', canvas.width / 2, 100);
-    ctx.font = '20px Arial';
-    ctx.fillStyle = COLORS.hudText;
-    ctx.fillText('Setas: mover', canvas.width / 2, 160);
-    ctx.fillText('ESPAÇO: pular', canvas.width / 2, 200);
-    ctx.fillText('Shift: correr', canvas.width / 2, 240);
-    ctx.fillText('P: pausar', canvas.width / 2, 280);
-    ctx.font = '18px Arial';
-    ctx.fillText('Pressione ESC para voltar', canvas.width / 2, 350);
-}
-function drawTutorial() {
-    ctx.save();
-    ctx.globalAlpha = 0.95;
-    ctx.fillStyle = COLORS.hudBg;
-    ctx.fillRect(100, 80, 600, 240);
-    ctx.restore();
-    ctx.font = 'bold 32px Arial';
-    ctx.fillStyle = COLORS.coin;
-    ctx.textAlign = 'center';
-    ctx.fillText('TUTORIAL', canvas.width / 2, 130);
-    ctx.font = '20px Arial';
-    ctx.fillStyle = COLORS.hudText;
-    ctx.fillText('Colete moedas, ative checkpoints, desvie dos inimigos!', canvas.width / 2, 180);
-    ctx.fillText('Pegue power-ups para ganhar habilidades temporárias.', canvas.width / 2, 210);
-    ctx.fillText('Chegue até a bandeira para vencer a fase!', canvas.width / 2, 240);
-    ctx.font = '18px Arial';
-    ctx.fillText('Pressione qualquer tecla para começar', canvas.width / 2, 310);
-}
-
-// --- HUD AVANÇADA ---
-function drawHUD(levelObj) {
-    ctx.save();
-    ctx.globalAlpha = 0.92;
-    ctx.fillStyle = COLORS.hudBg;
-    ctx.fillRect(0, 0, canvas.width, 50);
-    ctx.globalAlpha = 1;
-    ctx.font = 'bold 22px Arial';
-    ctx.fillStyle = COLORS.coin;
-    ctx.fillText('Moedas: ' + score, 30, 35);
-    ctx.fillStyle = COLORS.coinSpecial;
-    ctx.fillText('Moedas Especiais: ' + specialScore, 180, 35);
-    ctx.fillStyle = COLORS.life;
-    ctx.fillText('Vidas: ' + lives, 350, 35);
-    ctx.fillStyle = COLORS.level;
-    ctx.fillText('Fase: ' + (currentLevel + 1) + ' - ' + levelObj.name, 480, 35);
-    ctx.fillStyle = COLORS.highscore;
-    ctx.fillText('Recorde: ' + highscore, 700, 35);
-    // Barra de progresso
-    let progress = Math.min(1, player.x / (levelObj.length - 100));
-    ctx.fillStyle = COLORS.progressBg;
-    ctx.fillRect(20, 10, 200, 8);
-    ctx.fillStyle = COLORS.progressBar;
-    ctx.fillRect(20, 10, 200 * progress, 8);
-    ctx.restore();
-}
-
-// --- GAME LOOP PRINCIPAL ---
-function mainGameLoop() {
-    // Aqui virá o loop do jogo, HUD, chamada de drawHUD(levels[currentLevel]), etc
-    // Por enquanto, só HUD e fundo
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = COLORS.bg;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    drawHUD(levels[currentLevel]);
-    // ... (desenhar plataformas, inimigos, player, etc)
-}
-
-// --- LOOP DE RENDERIZAÇÃO ---
-function renderLoop() {
-    switch (gameState) {
-        case GAME_STATES.MENU:
-            drawMenu();
-            break;
-        case GAME_STATES.PAUSED:
-            mainGameLoop();
-            drawPause();
-            break;
-        case GAME_STATES.CREDITS:
-            drawCredits();
-            break;
-        case GAME_STATES.CONTROLS:
-            drawControls();
-            break;
-        case GAME_STATES.TUTORIAL:
-            mainGameLoop();
-            drawTutorial();
-            break;
-        default:
-            mainGameLoop();
-            break;
+class SheepJumpGame {
+    constructor() {
+        this.gameArea = document.getElementById('gameArea');
+        this.sheep = document.getElementById('sheep');
+        this.scoreElement = document.getElementById('score');
+        this.highScoreElement = document.getElementById('highScore');
+        this.speedElement = document.getElementById('speed');
+        this.startScreen = document.getElementById('startScreen');
+        this.gameOverScreen = document.getElementById('gameOverScreen');
+        this.startBtn = document.getElementById('startBtn');
+        this.restartBtn = document.getElementById('restartBtn');
+        this.finalScoreElement = document.getElementById('finalScore');
+        this.newRecordElement = document.getElementById('newRecord');
+        this.cloudsContainer = document.getElementById('clouds');
+        this.particlesContainer = document.getElementById('particles');
+        
+        this.isGameRunning = false;
+        this.isJumping = false;
+        this.score = 0;
+        this.highScore = parseInt(localStorage.getItem('sheepJumpHighScore')) || 0;
+        this.gameSpeed = 3;
+        this.baseSpeed = 3;
+        this.fences = [];
+        this.stars = [];
+        this.clouds = [];
+        this.gameLoop = null;
+        this.cloudSpawnTimer = null;
+        this.combo = 0;
+        this.lastStarTime = 0;
+        
+        this.init();
+        this.createClouds();
     }
-    requestAnimationFrame(renderLoop);
-}
-
-// --- CONTROLES DE MENU E JOGO ---
-document.addEventListener('keydown', (e) => {
-    if (gameState === GAME_STATES.MENU) {
-        if (e.key === 'ArrowUp') menuSelection = (menuSelection + menuOptions.length - 1) % menuOptions.length;
-        if (e.key === 'ArrowDown') menuSelection = (menuSelection + 1) % menuOptions.length;
-        if (e.key === 'Enter') {
-            if (menuSelection === 0) gameState = GAME_STATES.TUTORIAL;
-            if (menuSelection === 1) gameState = GAME_STATES.CONTROLS;
-            if (menuSelection === 2) gameState = GAME_STATES.CREDITS;
-        }
-    } else if (gameState === GAME_STATES.PAUSED) {
-        if (e.key === 'ArrowUp') pauseSelection = (pauseSelection + pauseOptions.length - 1) % pauseOptions.length;
-        if (e.key === 'ArrowDown') pauseSelection = (pauseSelection + 1) % pauseOptions.length;
-        if (e.key === 'Enter') {
-            if (pauseSelection === 0) gameState = GAME_STATES.PLAYING;
-            if (pauseSelection === 1) startGame();
-            if (pauseSelection === 2) gameState = GAME_STATES.MENU;
-        }
-        if (e.key === 'p' || e.key === 'P') gameState = GAME_STATES.PLAYING;
-    } else if (gameState === GAME_STATES.CREDITS || gameState === GAME_STATES.CONTROLS) {
-        if (e.key === 'Escape') gameState = GAME_STATES.MENU;
-    } else if (gameState === GAME_STATES.TUTORIAL) {
-        gameState = GAME_STATES.PLAYING;
-    } else if (gameState === GAME_STATES.PLAYING) {
-        if (e.key === 'p' || e.key === 'P') gameState = GAME_STATES.PAUSED;
-        // Aqui virão os controles do player, pulo, etc
+    
+    init() {
+        this.highScoreElement.textContent = `Best: ${this.highScore}`;
+        
+        this.startBtn.addEventListener('click', () => this.startGame());
+        this.restartBtn.addEventListener('click', () => this.restartGame());
+        
+        // Controls
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                if (this.isGameRunning) {
+                    this.jump();
+                }
+            }
+        });
+        
+        // Mobile touch controls
+        this.gameArea.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            if (this.isGameRunning) {
+                this.jump();
+            }
+        });
+        
+        // Prevent scrolling on mobile
+        document.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
     }
-});
-
-// --- INICIAR JOGO ---
-function startGame() {
-    score = 0;
-    specialScore = 0;
-    lives = 3;
-    level = 1;
-    win = false;
-    activePowerups.speed = 0;
-    activePowerups.shield = 0;
-    player.x = 80;
-    player.y = 320;
-    player.vy = 0;
-    player.vx = 0;
-    player.onGround = true;
-    player.blink = false;
-    player.blinkTimer = 0;
-    player.jumps = 0;
-    lastCheckpoint = { x: 80, y: 320 };
-    particles = [];
-    cameraX = 0;
-    showTip = true;
-    gameState = GAME_STATES.PLAYING;
+    
+    createClouds() {
+        for (let i = 0; i < 3; i++) {
+            setTimeout(() => {
+                this.spawnCloud();
+            }, i * 3000);
+        }
+        
+        this.cloudSpawnTimer = setInterval(() => {
+            this.spawnCloud();
+        }, 8000);
+    }
+    
+    spawnCloud() {
+        const cloud = document.createElement('div');
+        cloud.className = 'cloud';
+        cloud.style.width = Math.random() * 40 + 60 + 'px';
+        cloud.style.height = Math.random() * 20 + 30 + 'px';
+        cloud.style.top = Math.random() * 150 + 20 + 'px';
+        cloud.style.left = '100%';
+        this.cloudsContainer.appendChild(cloud);
+        
+        setTimeout(() => {
+            if (cloud.parentNode) {
+                cloud.remove();
+            }
+        }, 20000);
+    }
+    
+    startGame() {
+        this.isGameRunning = true;
+        this.score = 0;
+        this.gameSpeed = this.baseSpeed;
+        this.fences = [];
+        this.stars = [];
+        this.isJumping = false;
+        this.combo = 0;
+        this.lastStarTime = 0;
+        
+        this.startScreen.classList.add('hidden');
+        this.gameOverScreen.classList.add('hidden');
+        
+        this.updateUI();
+        
+        // Clear any existing obstacles
+        document.querySelectorAll('.fence, .star').forEach(el => el.remove());
+        
+        // Start spawning obstacles
+        this.spawnObstacle();
+        
+        // Start game loop
+        this.gameLoop = setInterval(() => this.update(), 16); // ~60fps
+    }
+    
+    jump() {
+        if (this.isJumping) return;
+        
+        this.isJumping = true;
+        this.sheep.classList.add('jumping');
+        
+        // Jump sound effect (visual feedback)
+        this.createParticles(this.sheep.offsetLeft + 25, 380, '#87CEEB', 5);
+        
+        setTimeout(() => {
+            this.isJumping = false;
+            this.sheep.classList.remove('jumping');
+        }, 600);
+    }
+    
+    spawnObstacle() {
+        if (!this.isGameRunning) return;
+        
+        const random = Math.random();
+        
+        // 70% chance for fence, 30% chance for star
+        if (random < 0.7) {
+            this.spawnFence();
+        } else {
+            this.spawnStar();
+        }
+        
+        // Schedule next obstacle
+        const nextDelay = Math.random() * 1500 + 1000; // 1-2.5 seconds
+        setTimeout(() => this.spawnObstacle(), nextDelay);
+    }
+    
+    spawnFence() {
+        const fence = document.createElement('div');
+        fence.className = 'fence';
+        fence.style.left = '820px';
+        this.gameArea.appendChild(fence);
+        this.fences.push(fence);
+    }
+    
+    spawnStar() {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.textContent = '⭐';
+        star.style.left = '820px';
+        this.gameArea.appendChild(star);
+        this.stars.push(star);
+    }
+    
+    createParticles(x, y, color, count) {
+        for (let i = 0; i < count; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = x + Math.random() * 20 - 10 + 'px';
+            particle.style.top = y + Math.random() * 20 - 10 + 'px';
+            particle.style.background = color;
+            
+            const angle = Math.random() * Math.PI * 2;
+            const velocity = Math.random() * 20 + 10;
+            particle.style.setProperty('--dx', Math.cos(angle) * velocity + 'px');
+            particle.style.setProperty('--dy', Math.sin(angle) * velocity + 'px');
+            
+            this.particlesContainer.appendChild(particle);
+            
+            setTimeout(() => {
+                if (particle.parentNode) {
+                    particle.remove();
+                }
+            }, 1000);
+        }
+    }
+    
+    updateUI() {
+        this.scoreElement.textContent = `Score: ${this.score}`;
+        this.speedElement.textContent = `Speed: ${Math.round((this.gameSpeed / this.baseSpeed) * 10) / 10}x`;
+    }
+    
+    update() {
+        if (!this.isGameRunning) return;
+        
+        // Move fences
+        this.fences.forEach((fence, index) => {
+            const currentLeft = parseInt(fence.style.left);
+            const newLeft = currentLeft - this.gameSpeed;
+            
+            if (newLeft < -20) {
+                // Fence passed, remove it and increase score
+                fence.remove();
+                this.fences.splice(index, 1);
+                this.score += 10;
+                this.combo++;
+                
+                // Combo bonus
+                if (this.combo > 1) {
+                    this.score += this.combo * 5;
+                    this.createParticles(150, 150, '#FFD700', 3);
+                }
+                
+                this.updateUI();
+                
+                // Increase game speed gradually
+                if (this.score % 100 === 0) {
+                    this.gameSpeed += 0.5;
+                    this.gameArea.classList.add('speed-up');
+                    setTimeout(() => {
+                        this.gameArea.classList.remove('speed-up');
+                    }, 300);
+                }
+            } else {
+                fence.style.left = newLeft + 'px';
+                
+                // Collision detection
+                if (this.checkCollision(fence)) {
+                    this.gameOver();
+                    return;
+                }
+            }
+        });
+        
+        // Move stars
+        this.stars.forEach((star, index) => {
+            const currentLeft = parseInt(star.style.left);
+            const newLeft = currentLeft - this.gameSpeed;
+            
+            if (newLeft < -30) {
+                // Star missed
+                star.remove();
+                this.stars.splice(index, 1);
+                this.combo = 0; // Reset combo if star is missed
+            } else {
+                star.style.left = newLeft + 'px';
+                
+                // Star collection
+                if (this.checkStarCollection(star)) {
+                    star.remove();
+                    this.stars.splice(index, 1);
+                    this.score += 25;
+                    this.combo++;
+                    this.createParticles(parseInt(star.style.left), 250, '#FFD700', 8);
+                    this.updateUI();
+                }
+            }
+        });
+    }
+    
+    checkCollision(fence) {
+        const sheepRect = this.sheep.getBoundingClientRect();
+        const fenceRect = fence.getBoundingClientRect();
+        
+        // More precise collision detection
+        const sheepBottom = this.isJumping ? sheepRect.bottom - 120 : sheepRect.bottom;
+        
+        return (
+            sheepRect.left + 10 < fenceRect.right &&
+            sheepRect.right - 10 > fenceRect.left &&
+            sheepBottom > fenceRect.top + 5 &&
+            sheepRect.top < fenceRect.bottom
+        );
+    }
+    
+    checkStarCollection(star) {
+        const sheepRect = this.sheep.getBoundingClientRect();
+        const starRect = star.getBoundingClientRect();
+        
+        return (
+            sheepRect.left < starRect.right &&
+            sheepRect.right > starRect.left &&
+            sheepRect.bottom > starRect.top &&
+            sheepRect.top < starRect.bottom
+        );
+    }
+    
+    gameOver() {
+        this.isGameRunning = false;
+        clearInterval(this.gameLoop);
+        
+        // Screen shake effect
+        this.gameArea.classList.add('game-shake');
+        setTimeout(() => {
+            this.gameArea.classList.remove('game-shake');
+        }, 500);
+        
+        // Check for new high score
+        let isNewRecord = false;
+        if (this.score > this.highScore) {
+            this.highScore = this.score;
+            localStorage.setItem('sheepJumpHighScore', this.highScore);
+            this.highScoreElement.textContent = `Best: ${this.highScore}`;
+            isNewRecord = true;
+        }
+        
+        this.finalScoreElement.textContent = this.score;
+        
+        if (isNewRecord) {
+            this.newRecordElement.classList.remove('hidden');
+        } else {
+            this.newRecordElement.classList.add('hidden');
+        }
+        
+        this.gameOverScreen.classList.remove('hidden');
+        
+        // Clear all obstacles
+        this.fences.forEach(fence => fence.remove());
+        this.stars.forEach(star => star.remove());
+        this.fences = [];
+        this.stars = [];
+    }
+    
+    restartGame() {
+        this.startGame();
+    }
 }
 
-// --- INICIAR LOOP ---
-renderLoop(); 
+// Start the game
+const game = new SheepJumpGame();
