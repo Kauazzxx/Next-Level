@@ -1,52 +1,64 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ovelha 404</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ovelha 404</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <div id="gameContainer">
-        <div id="gameArea">
-            <div id="ui">
-                <div id="score">Pontuação: 0</div>
-                <div id="highScore">Recorde: 0</div>
-                <div id="speed">Velocidade: 1x</div>
-            </div>
-            <div id="sheep"></div>
-            <div id="ground"></div>
-            <div id="clouds"></div>
-            <div id="particles"></div>
-            <div id="gameOverScreen" class="hidden">
-                <h2>Game Over!</h2>
-                <p>Score: <span id="finalScore">0</span></p>
-                <p id="newRecord" class="hidden">🏆 Novo Recorde!</p>
-                <button id="restartBtn">Recomeçar</button>
-            </div>
-            <div id="sheep">
-               <div class="pata pata1"></div>
-               <div class="pata pata2"></div>
-               <div class="pata pata3"></div>
-               <div class="pata pata4"></div>
-            </div>
-            <div id="startScreen">
-                <h1>🐑 Ovelha 404</h1>
-                <p>Pule as cercas e colete estrelas!</p>
-                <div class="controls">
-                    <p>Desktop: ESPAÇO para pular</p>
-                    <p>Mobile: Toque na tela</p>
-                </div>
-                <button id="startBtn">Começar</button>
-            </div>
+  <div id="gameContainer">
+    <div id="gameArea">
+      <!-- Interface do jogo -->
+      <div id="ui">
+        <div id="score">Pontuação: 0</div>
+        <div id="highScore">Recorde: 0</div>
+        <div id="speed">Velocidade: 1x</div>
+      </div>
+
+      <!-- Ovelha com detalhes -->
+      <div id="sheep">
+        <div class="pata pata1"></div>
+        <div class="pata pata2"></div>
+        <div class="pata pata3"></div>
+        <div class="pata pata4"></div>
+      </div>
+
+      <!-- Elementos do cenário -->
+      <div id="ground"></div>
+      <div id="clouds"></div>
+      <div id="particles"></div>
+
+      <!-- Tela de fim de jogo -->
+      <div id="gameOverScreen" class="hidden">
+        <h2>Game Over!</h2>
+        <p>Score: <span id="finalScore">0</span></p>
+        <p id="newRecord" class="hidden">🏆 Novo Recorde!</p>
+        <button id="restartBtn">Recomeçar</button>
+      </div>
+
+      <!-- Tela inicial -->
+      <div id="startScreen">
+        <h1>🐑 Ovelha 404</h1>
+        <p>Pule as cercas e colete estrelas!</p>
+        <div class="controls">
+          <p>Desktop: ESPAÇO para pular</p>
+          <p>Mobile: Toque na tela</p>
         </div>
-        <div id="instructions">
-            <p>Colete ⭐ para pontos extras • Evite as cercas • O jogo acelera com o tempo!</p>
-        </div>
+        <button id="startBtn">Começar</button>
+      </div>
     </div>
-    <script src="acao-game.js"></script>
+
+    <!-- Instruções do jogo -->
+    <div id="instructions">
+      <p>Colete ⭐ para pontos extras • Evite as cercas • O jogo acelera com o tempo!</p>
+    </div>
+  </div>
+
+  <!-- Script principal -->
+  <script src="acao-game.js"></script>
 </body>
 </html>
