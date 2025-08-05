@@ -533,18 +533,60 @@ button:active {
         height: 300px;
     }
     
-    #sheep {
-        width: 40px;
-        height: 40px;
-        left: 80px;
-    }
-    
-    #sheep::before {
-        width: 25px;
-        height: 25px;
-        top: -15px;
-        left: 6px;
-    }
+  #sheep {
+    width: 60px;
+    height: 50px;
+    background: radial-gradient(circle at 30% 30%, #fff, #e0e0e0);
+    border: 2px solid #333;
+    border-radius: 50% 50% 40% 40%;
+    position: absolute;
+    bottom: 80px;
+    left: 100px;
+    transition: none;
+    z-index: 10;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Cabeça da ovelha */
+#sheep::before {
+    content: '';
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    background: #444;
+    border-radius: 50%;
+    top: 10px;
+    left: -20px;
+}
+
+/* Orelhas */
+#sheep::after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #444;
+    border-radius: 50%;
+    top: 16px;
+    left: -28px;
+    box-shadow: 38px 0 #444;
+}
+
+/* Patas */
+.pata {
+    position: absolute;
+    width: 6px;
+    height: 12px;
+    background: #333;
+    bottom: -10px;
+    border-radius: 2px;
+}
+
+.pata1 { left: 10px; }
+.pata2 { left: 20px; }
+.pata3 { left: 30px; }
+.pata4 { left: 40px; }
+
     
     #startScreen h1, #gameOverScreen h2 {
         font-size: 2em;
