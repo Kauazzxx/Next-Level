@@ -1,330 +1,198 @@
-class SheepJumpGame {
-    constructor() {
-        this.gameArea = document.getElementById('gameArea');
-        this.sheep = document.getElementById('sheep');
-        this.scoreElement = document.getElementById('score');
-        this.highScoreElement = document.getElementById('highScore');
-        this.speedElement = document.getElementById('speed');
-        this.startScreen = document.getElementById('startScreen');
-        this.gameOverScreen = document.getElementById('gameOverScreen');
-        this.startBtn = document.getElementById('startBtn');
-        this.restartBtn = document.getElementById('restartBtn');
-        this.finalScoreElement = document.getElementById('finalScore');
-        this.newRecordElement = document.getElementById('newRecord');
-        this.cloudsContainer = document.getElementById('clouds');
-        this.particlesContainer = document.getElementById('particles');
-        
-        this.isGameRunning = false;
-        this.isJumping = false;
-        this.score = 0;
-        this.highScore = parseInt(localStorage.getItem('sheepJumpHighScore')) || 0;
-        this.gameSpeed = 3;
-        this.baseSpeed = 3;
-        this.fences = [];
-        this.stars = [];
-        this.clouds = [];
-        this.gameLoop = null;
-        this.cloudSpawnTimer = null;
-        this.combo = 0;
-        this.lastStarTime = 0;
-        
-        this.init();
-        this.createClouds();
-    }
-    
-    init() {
-        this.highScoreElement.textContent = `Best: ${this.highScore}`;
-        
-        this.startBtn.addEventListener('click', () => this.startGame());
-        this.restartBtn.addEventListener('click', () => this.restartGame());
-        
-        // Controls
-        document.addEventListener('keydown', (e) => {
-            if (e.code === 'Space') {
-                e.preventDefault();
-                if (this.isGameRunning) {
-                    this.jump();
-                }
-            }
-        });
-        
-        // Mobile touch controls
-        this.gameArea.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            if (this.isGameRunning) {
-                this.jump();
-            }
-        });
-        
-        // Prevent scrolling on mobile
-        document.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
-    }
-    
-    createClouds() {
-        for (let i = 0; i < 3; i++) {
-            setTimeout(() => {
-                this.spawnCloud();
-            }, i * 3000);
-        }
-        
-        this.cloudSpawnTimer = setInterval(() => {
-            this.spawnCloud();
-        }, 8000);
-    }
-    
-    spawnCloud() {
-        const cloud = document.createElement('div');
-        cloud.className = 'cloud';
-        cloud.style.width = Math.random() * 40 + 60 + 'px';
-        cloud.style.height = Math.random() * 20 + 30 + 'px';
-        cloud.style.top = Math.random() * 150 + 20 + 'px';
-        cloud.style.left = '100%';
-        this.cloudsContainer.appendChild(cloud);
-        
-        setTimeout(() => {
-            if (cloud.parentNode) {
-                cloud.remove();
-            }
-        }, 20000);
-    }
-    
-    startGame() {
-        this.isGameRunning = true;
-        this.score = 0;
-        this.gameSpeed = this.baseSpeed;
-        this.fences = [];
-        this.stars = [];
-        this.isJumping = false;
-        this.combo = 0;
-        this.lastStarTime = 0;
-        
-        this.startScreen.classList.add('hidden');
-        this.gameOverScreen.classList.add('hidden');
-        
-        this.updateUI();
-        
-        // Clear any existing obstacles
-        document.querySelectorAll('.fence, .star').forEach(el => el.remove());
-        
-        // Start spawning obstacles
-        this.spawnObstacle();
-        
-        // Start game loop
-        this.gameLoop = setInterval(() => this.update(), 16); // ~60fps
-    }
-    
-    jump() {
-        if (this.isJumping) return;
-        
-        this.isJumping = true;
-        this.sheep.classList.add('jumping');
-        
-        // Jump sound effect (visual feedback)
-        this.createParticles(this.sheep.offsetLeft + 25, 380, '#87CEEB', 5);
-        
-        setTimeout(() => {
-            this.isJumping = false;
-            this.sheep.classList.remove('jumping');
-        }, 600);
-    }
-    
-    spawnObstacle() {
-        if (!this.isGameRunning) return;
-        
-        const random = Math.random();
-        
-        // 70% chance for fence, 30% chance for star
-        if (random < 0.7) {
-            this.spawnFence();
-        } else {
-            this.spawnStar();
-        }
-        
-        // Schedule next obstacle
-        const nextDelay = Math.random() * 1500 + 1000; // 1-2.5 seconds
-        setTimeout(() => this.spawnObstacle(), nextDelay);
-    }
-    
-    spawnFence() {
-        const fence = document.createElement('div');
-        fence.className = 'fence';
-        fence.style.left = '820px';
-        this.gameArea.appendChild(fence);
-        this.fences.push(fence);
-    }
-    
-    spawnStar() {
-        const star = document.createElement('div');
-        star.className = 'star';
-        star.textContent = '⭐';
-        star.style.left = '820px';
-        this.gameArea.appendChild(star);
-        this.stars.push(star);
-    }
-    
-    createParticles(x, y, color, count) {
-        for (let i = 0; i < count; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.left = x + Math.random() * 20 - 10 + 'px';
-            particle.style.top = y + Math.random() * 20 - 10 + 'px';
-            particle.style.background = color;
-            
-            const angle = Math.random() * Math.PI * 2;
-            const velocity = Math.random() * 20 + 10;
-            particle.style.setProperty('--dx', Math.cos(angle) * velocity + 'px');
-            particle.style.setProperty('--dy', Math.sin(angle) * velocity + 'px');
-            
-            this.particlesContainer.appendChild(particle);
-            
-            setTimeout(() => {
-                if (particle.parentNode) {
-                    particle.remove();
-                }
-            }, 1000);
-        }
-    }
-    
-    updateUI() {
-        this.scoreElement.textContent = `Score: ${this.score}`;
-        this.speedElement.textContent = `Speed: ${Math.round((this.gameSpeed / this.baseSpeed) * 10) / 10}x`;
-    }
-    
-    update() {
-        if (!this.isGameRunning) return;
-        
-        // Move fences
-        this.fences.forEach((fence, index) => {
-            const currentLeft = parseInt(fence.style.left);
-            const newLeft = currentLeft - this.gameSpeed;
-            
-            if (newLeft < -20) {
-                // Fence passed, remove it and increase score
-                fence.remove();
-                this.fences.splice(index, 1);
-                this.score += 10;
-                this.combo++;
-                
-                // Combo bonus
-                if (this.combo > 1) {
-                    this.score += this.combo * 5;
-                    this.createParticles(150, 150, '#FFD700', 3);
-                }
-                
-                this.updateUI();
-                
-                // Increase game speed gradually
-                if (this.score % 100 === 0) {
-                    this.gameSpeed += 0.5;
-                    this.gameArea.classList.add('speed-up');
-                    setTimeout(() => {
-                        this.gameArea.classList.remove('speed-up');
-                    }, 300);
-                }
-            } else {
-                fence.style.left = newLeft + 'px';
-                
-                // Collision detection
-                if (this.checkCollision(fence)) {
-                    this.gameOver();
-                    return;
-                }
-            }
-        });
-        
-        // Move stars
-        this.stars.forEach((star, index) => {
-            const currentLeft = parseInt(star.style.left);
-            const newLeft = currentLeft - this.gameSpeed;
-            
-            if (newLeft < -30) {
-                // Star missed
-                star.remove();
-                this.stars.splice(index, 1);
-                this.combo = 0; // Reset combo if star is missed
-            } else {
-                star.style.left = newLeft + 'px';
-                
-                // Star collection
-                if (this.checkStarCollection(star)) {
-                    star.remove();
-                    this.stars.splice(index, 1);
-                    this.score += 25;
-                    this.combo++;
-                    this.createParticles(parseInt(star.style.left), 250, '#FFD700', 8);
-                    this.updateUI();
-                }
-            }
-        });
-    }
-    
-    checkCollision(fence) {
-        const sheepRect = this.sheep.getBoundingClientRect();
-        const fenceRect = fence.getBoundingClientRect();
-        
-        // More precise collision detection
-        const sheepBottom = this.isJumping ? sheepRect.bottom - 120 : sheepRect.bottom;
-        
-        return (
-            sheepRect.left + 10 < fenceRect.right &&
-            sheepRect.right - 10 > fenceRect.left &&
-            sheepBottom > fenceRect.top + 5 &&
-            sheepRect.top < fenceRect.bottom
-        );
-    }
-    
-    checkStarCollection(star) {
-        const sheepRect = this.sheep.getBoundingClientRect();
-        const starRect = star.getBoundingClientRect();
-        
-        return (
-            sheepRect.left < starRect.right &&
-            sheepRect.right > starRect.left &&
-            sheepRect.bottom > starRect.top &&
-            sheepRect.top < starRect.bottom
-        );
-    }
-    
-    gameOver() {
-        this.isGameRunning = false;
-        clearInterval(this.gameLoop);
-        
-        // Screen shake effect
-        this.gameArea.classList.add('game-shake');
-        setTimeout(() => {
-            this.gameArea.classList.remove('game-shake');
-        }, 500);
-        
-        // Check for new high score
-        let isNewRecord = false;
-        if (this.score > this.highScore) {
-            this.highScore = this.score;
-            localStorage.setItem('sheepJumpHighScore', this.highScore);
-            this.highScoreElement.textContent = `Best: ${this.highScore}`;
-            isNewRecord = true;
-        }
-        
-        this.finalScoreElement.textContent = this.score;
-        
-        if (isNewRecord) {
-            this.newRecordElement.classList.remove('hidden');
-        } else {
-            this.newRecordElement.classList.add('hidden');
-        }
-        
-        this.gameOverScreen.classList.remove('hidden');
-        
-        // Clear all obstacles
-        this.fences.forEach(fence => fence.remove());
-        this.stars.forEach(star => star.remove());
-        this.fences = [];
-        this.stars = [];
-    }
-    
-    restartGame() {
-        this.startGame();
-    }
+const $ = (tag) => document.querySelector(tag)
+
+const cnv = $('canvas')
+	cnv.width = innerWidth
+	cnv.height = innerHeight
+const ctx = cnv.getContext('2d')
+const player = new Player(cnv.width/2,cnv.height/2,30,'#48FCFF')
+const shootingSpeed = 4
+const txtScore = $('#txtScore')
+const gameOverModal = $('#gameOverModal')
+const gameOverScore = $('#gameOverScore')
+const btnNewGame = $('#btnNewGame')
+const startModal = $('#startModal')
+const startContainer = $('#startContainer')
+const musicGame = $('#musicGame')
+	musicGame.volume = .5
+const EXPLOSION = 1
+const SHOOTING = 2
+
+let projectiles = []
+let enemies = []
+let particles = []
+let intervalID
+let animationID
+let score = 0
+
+function spawnEnemies(){
+	intervalID = setInterval(()=>{
+		const radius = Math.floor(Math.random() * 26) + 5
+		
+		let posX, posY
+		if(Math.random() < .5){
+			posX = Math.random() < .5 ? 0 - radius : cnv.width + radius
+			posY = Math.random() * cnv.height
+		} else {
+			posX = Math.random() * cnv.width
+			posY = Math.random() < .5 ? 0 - radius : cnv.height + radius
+		}
+		
+		const angle = Math.atan2(player.y - posY, player.x - posX)
+		const velocity = {
+			x: Math.cos(angle),
+			y: Math.sin(angle)
+		}
+		
+		const color = 'hsl('+ Math.random() * 360 +',50%,50%)'
+		
+		enemies.push(new Enemy(posX,posY,radius,color,velocity))
+	},1500)
 }
 
-// Start the game
-const game = new SheepJumpGame();
+cnv.addEventListener('click',(e)=>{
+	e.preventDefault()
+	playSound(SHOOTING)
+	const angle = Math.atan2(e.clientY - player.y, e.clientX - player.x)
+	const velocity = {
+		x: Math.cos(angle) * shootingSpeed,
+		y: Math.sin(angle) * shootingSpeed
+	}
+	projectiles.push(new Projectile(player.x, player.y, 3, '#48FCFF', velocity))
+})
+
+startContainer.addEventListener('click',()=>{
+	startModal.style.opacity = 0
+	
+	setTimeout(()=>{
+		startModal.style.zIndex = -1
+	},500)
+	
+	newGame()
+})
+
+btnNewGame.addEventListener('click', newGame)
+
+function loop(){
+	animationID = requestAnimationFrame(loop,cnv)
+	update()
+}
+
+function update(){
+	ctx.fillStyle = 'rgba(0,0,0,.1)'
+	ctx.fillRect(0,0,cnv.width,cnv.height)
+	
+	checkEnemies()
+	checkProjectiles()
+	checkParticles()
+	player.update()
+}
+
+function checkEnemies(){
+	enemies.forEach((enemy)=>{
+		enemy.update()
+		
+		const distance = Math.hypot(player.x - enemy.x, player.y - enemy.y)
+		if(distance < player.radius + enemy.radius){
+			gameOver()
+		}
+	})
+}
+
+function gameOver(){
+	musicGame.pause()
+	musicGame.currentTime = 0
+	cancelAnimationFrame(animationID)
+	clearInterval(intervalID)
+	gameOverScore.innerText = score
+	gameOverModal.style.opacity = 1
+	gameOverModal.style.zIndex = 1
+}
+
+function newGame(){
+	musicGame.play()
+	gameOverModal.style.opacity = 0
+	gameOverModal.style.zIndex = -1
+	projectiles = []
+	particles = []
+	enemies = []
+	score = 0
+	txtScore.innerText = 'SCORE: ' + score
+	loop()
+	spawnEnemies()
+	ctx.fillStyle = 'white'
+	ctx.fillRect(0,0,cnv.width,cnv.height)
+}
+
+function playSound(soundType){
+	const sound  = document.createElement('audio')
+	sound.src = soundType === EXPLOSION ? './snd/explosion.ogg' : './snd/shooting.mp3'
+	sound.addEventListener('canplaythrough',()=>{
+		sound.play()
+	})
+}
+
+function checkProjectiles(){
+	for(let i = projectiles.length -1; i >= 0; i--){
+		const p = projectiles[i]
+		p.update()
+		checkOffScreen(p,i)
+		
+		for(let eIndex = enemies.length -1; eIndex >= 0; eIndex--){
+			const enemy = enemies[eIndex]
+			const distance = Math.hypot(p.x - enemy.x, p.y - enemy.y)
+			
+			//Colisão do projétil com o inimigo
+			if(distance < p.radius + enemy.radius){
+				playSound(EXPLOSION)
+				if(enemy.radius > 15){
+					enemy.newRadius = enemy.radius -10
+				} else {
+					enemies.splice(eIndex,1)
+				}
+				
+				score += 50 - Math.floor(enemy.radius)
+				txtScore.innerText = 'SCORE: ' + score
+				
+				projectiles.splice(i,1)
+				createParticles(enemy,p)
+			}
+		}
+	}
+}
+
+function checkOffScreen(projectile, index){
+	if(	projectile.x + projectile.radius < 0 ||
+		projectile.x - projectile.radius > cnv.width ||
+		projectile.y + projectile.radius < 0 || 
+		projectile.y - projectile.radius > cnv.height)
+	{
+		score -= 100
+		if(score < 0){
+			score = 0
+		}
+		
+		txtScore.innerText = 'SCORE: ' + score
+	
+		projectiles.splice(index,1)
+	}
+}
+
+function createParticles(enemy,projectile){
+	for(let i = 0; i < enemy.radius * 2; i++){
+		const velocity = {
+			x: (Math.random() - .5) * (Math.random() * 6),
+			y: (Math.random() - .5) * (Math.random() * 6)
+		}
+		particles.push(new Particle(projectile.x,projectile.y,Math.random()*2,enemy.color,velocity))
+	}
+}
+
+function checkParticles(){
+	for(let i = particles.length -1; i >= 0; i--){
+		const p = particles[i]
+		p.update()
+		if(p.alpha <= 0){
+			particles.splice(i,1)
+		}
+	}
+}
